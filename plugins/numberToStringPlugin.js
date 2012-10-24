@@ -1,5 +1,5 @@
 ;(function ( $, window, undefined ) {
-
+// plugin boilerplate 
   var pluginName = 'numberToString',
       document = window.document,
       defaults = {
