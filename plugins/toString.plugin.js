@@ -1,9 +1,14 @@
 // jquery plugin to convert numbers to String 
 // multilanguage support 
 // Author Hichem Ben Chaabene 
+
+// usage 
+// select a div 
+//
+//
 (function($) {
-  $.fn.goString= function(options) {
-	var defaults={
+  $.fn.goString = function(options) {
+	var defaults = {
 		dictionnary1:[
 					0,
 					1,
@@ -79,23 +84,16 @@
 					finalStringOutput:'#finalStringOutput',
 					trigguer:'#goString', 	
 	};
-	var obj= $.extend(defaults,options);
+	var obj = $.extend(defaults,options);
 	return  this.each(function(){
-	var e=$(this); 
+	var e = $(this); 
 		e.click(function(){
-
-			var a=getNumber(); 
-			var t =getThousands(a); 
-			var h =getHundreds(a);
-			var finalText= mapit(t)+mapit(h); 
+			var a = getNumber(); 
+			var t = getThousands(a); 
+			var h = getHundreds(a);
+			var finalText = mapit(t)+mapit(h); 
 			
-			$(obj.finalStringOutput)[0].innerHTML=finalText;
-
-			/*return validate(a)?true:false; 
-			var d=getDecimals(a);
-			var u=getUnits(a):
-			//var message= t+h+d+u;   
-			*/
+			$(obj.finalStringOutput)[0].innerHTML = finalText;
 
 		});
 		function getNumber(){
@@ -104,21 +102,21 @@
 		}
 		function mapit(myValue){
 			var myValue = myValue;
-			var textprefix=' and ', 
-				many='s', 
-				stringOutput='';  
+			var textprefix = ' and ', 
+				many = 's', 
+				stringOutput = '';  
 
 			if(myValue>99&&myValue<999){// map thousands 
-				if(myValue==1){
-					stringOutput =mappedvalue+textprefix; 
+				if(myValue = = 1){
+					stringOutput = mappedvalue+textprefix; 
 				} 
 			}else if (myValue>9&&myValue<99){ // map hundreds
-				if(myValue=1){
-					stringOutput =mappedvalue+textprefix; 
+				if(myValue = 1){
+					stringOutput = mappedvalue+textprefix; 
 				}
 			}else{// in this case we are mapping units
 				var unitString = getUnits(myValue);// get the value and then map it  
-					stringOutput= mappingString(unitString);
+					stringOutput = mappingString(unitString);
 					alert('the units string output is '+stringOutput);// will display the mapped units  
 				return stringOutput; 
 			} 
@@ -128,10 +126,10 @@
 
 		function mappingString (unitString){
 			var a,
-				c=unitString,
+				c = unitString,
 				val; // closing the vars ici 
-			var  a=$.inArray(c,obj.dictionnary1);
-				 val =obj.dictionnary2[a];  
+			var  a = $.inArray(c,obj.dictionnary1);
+				 val = obj.dictionnary2[a];  
 				 alert('the value to be returned is '+val); 
 					 return (val);
 		}
@@ -149,7 +147,7 @@
 		}
 		// validate function 
 		function validate(a){
-			 var isaValidNumber =a ; 
+			 var isaValidNumber = a ; 
 			 return isNaN(isaValidNumber) ? null : result;
 		}
 		function unvalidNumber(){
