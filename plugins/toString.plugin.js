@@ -4,7 +4,7 @@
 
 // usage 
 // select a div 
-//
+// apply goString 
 //
 (function($) {
   $.fn.goString = function(options) {
