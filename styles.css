@@ -1,0 +1,38 @@
+/* 
+	Author : hichem benchaaben ;
+	this is an indepandant project  
+	styles for Number to String 
+*/
+body {
+	font-family: arial;
+	font-size: 12px;
+}
+form,input {
+	display: block;
+} 
+form {
+
+}
+input {
+
+	color:#000;
+} 
+#header {
+	height:50px;
+	display:block;
+}
+#container {
+	width:900px;
+	margin: 0 auto;
+	border:1px solid #333333;
+	padding:10px;
+}
+#content {
+	width:100%;
+} 
+#result {
+	color:green;
+} 
+.button {
+	color:blue; 
+}
