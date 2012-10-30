@@ -40,8 +40,15 @@ $.fn.numbertoString = function(options) {
  			
 
  			var val = buildHundreds(myValue); 
+ 				displayOutput(val);
 
- 			displayOutput(val);
+ 			//building a test case  
+ 			for (var i = 0; i < 999; i++) {
+ 				var val = buildHundreds(i); 
+ 				displayOutput(val);
+ 			};
+
+ 			
 
 			/*	var val = buildDecimals(myValue);
 					  displayOutput(val); 
@@ -59,42 +66,47 @@ $.fn.numbertoString = function(options) {
     			hundreds_string = '',
     			decimals_string = '',
     			decimals_number , 
-    			stringtoDisplay = ''; 
+    			stringtoDisplay = '', 
+    			seperator_eng= ' and '; 
 
     		tmp_string = parseString(argument); 
+    		s_lenght = tmp_string.length; 
 
-    		if(tmp_string.length > 0 && tmp_string.length < 2){
-    			displayOutput('we are in a case where there is no hundreds ') ; 
-    			decimals_number  = argument ; 
-    			decimals_string = buildDecimals(decimals_number); 
+    		if( (s_lenght > 0 ) && (s_lenght <= 2)){
 
-    			return hundreds_string+''+decimals_number;
+    			//displayOutput('we are in a case where there is no hundreds ') ; 
+   
+    			decimals_string = buildDecimals(argument); 
+
+    			return decimals_string;
     		}  
-    		if (tmp_string.length > 2 && tmp_string.length < 4){
-    			displayOutput('we are in a case where there is only one hundred  ') ;
+    		if( (s_lenght > 2 ) && (s_lenght < 4)){
+    			
+    			//displayOutput('we are in a case where there is only one hundred  ') ;
+    			
     			// it has at least a hundred in there 
     			// tmp_string = reverseString(tmp_string);  
     			 // now we have a reversed string  ....  
     			 // we are trying to find how many hundreds are there 
     			 // so we should take only the 4th caracter as string 
     			 // and the rest will be sent to the decimals function
-    			 hundreds_string = tmp_string; 
+
     			 hundreds_string = tmp_string.substring(0,1);
+    			 hundreds_number = parseInt(hundreds_string);
+    			 hundreds_string = buildDecimals(hundreds_number);
+ 				 hundreds_string = hundreds_string+' hundred ' ;
+
     			 tmp_string = reverseString(tmp_string) ; 
-    			 tmp_string = tmp_string.substring(0,2);
+    			 decimals_string = tmp_string.substring(0,2); 
+    			 decimals_string = reverseString(tmp_string); 
+    			 decimals_number = parseInt(decimals_string); 
+    			 decimals_string = buildDecimals(decimals_number);
+
     			 // now we send the numbers  to the other function
     			 // and it will take care of it  
-    			 decimals_number = parseInt(tmp_string); 
-    			 hundreds_number = parseInt(hundreds_string);
-
-
-    			 decimals_string = buildDecimals(decimals_number); 
-    			 hundreds_string = buildDecimals(hundreds_number); 
-
-				// we should have something like five hundred and twenty 
-    		
-    			 return hundreds_string+''+decimals_number; 
-
+  				return hundreds_string+seperator_eng+decimals_string; 
+    			  
+  
     		}else{
     			// in this case the decimals function will take 
     			// care on the concept 
@@ -190,8 +202,9 @@ $.fn.numbertoString = function(options) {
     	}
     	function displayOutput (argument) {
     		// body... 
-    		$(opts.divMessage).text(''); 
-    		$(opts.divMessage).text(argument) ;  
+    		//$(opts.divMessage).text(''); 
+    		$(opts.divMessage).prepend(argument) ; 
+    		$(opts.divMessage).prepend('</hr><br/>') ; 
     		return ;// exit fromt the function 
     	}
     	function detectNumber (offset,argument) {
