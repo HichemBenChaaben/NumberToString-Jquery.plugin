@@ -14,13 +14,14 @@ $.fn.numbertoString = function(options) {
 
   this.each(function() {
 
+  	 window.onerror=function(){
+  	 	displayOutput('there is some errors on the webpage '); 
+  	 } 
     var e = $(this);
 
-    $(opts.trigger).click(function(){
-    	$(opts.divMessage).text('plugin working fine 1!! ') ; 
+    $(opts.trigger).click(function(){ 
     	var a= $(opts.theNumber).val();
     		a = getNumber(a); 
-
     	mapping() ; 
 
     }); // end click function 
@@ -37,48 +38,148 @@ $.fn.numbertoString = function(options) {
 			
 			// m will hold how many numbers are in the string actually 
  			
- 			var stringArray = parseString(myValue); 
 
- 			var unitsString = stringArray ; 
- 				unitsString = unitsString.substring(0,2);
+ 			var val = buildHundreds(myValue); 
 
- 			var hundredsString = reverseString(stringArray); 
- 				hundredsString = hundredsString.substring(2, 3); 
+ 			displayOutput(val);
 
- 			var thousandsString = reverseString(stringArray); 
- 				thousandsString = thousandsString.substring(3,6);
- 			
- 			alert('the units are '+unitsString);
- 			alert('the hundreds are '+hundredsString) ;
- 			alert('the thousands are '+thousandsString); 
- 			 
- 			 for (var i = 0 ; i < stringArray.length; i++) { 
- 			 
- 			 	var counter = 0 ,
- 			 		prefix_thousands = ' thousands', 
- 			 		prefix_hundreds = ' hundreds '; 
- 			 		num_thousands = getThousands(parseInt(stringArray));
- 			 		//alert('the numbers there are '+ stringArray[i]); 
- 			 }; 
+			/*	var val = buildDecimals(myValue);
+					  displayOutput(val); 
+					  */
+    	}
 
- 			 // mapping the number with the table 
- 			 // building the string output
- 			 stringOutput =  buildText(num_thousands,prefix_thousands);
- 			 // will return how many thousands on the string 
- 			 // display the full string output 
- 			 displayOutput(stringOutput);
+    	// take the full number check how many thousands in there 
+    	// and gives the 0 00 two last digits to buildDecimals 
+    	// receive the full number  
+    	// then return a bigger string to display 
+
+    	function buildHundreds(argument){
+
+    		var tmp_string = '',
+    			hundreds_string = '',
+    			decimals_string = '',
+    			decimals_number , 
+    			stringtoDisplay = ''; 
+
+    		tmp_string = parseString(argument); 
+
+    		if(tmp_string.length > 0 && tmp_string.length < 2){
+    			displayOutput('we are in a case where there is no hundreds ') ; 
+    			decimals_number  = argument ; 
+    			decimals_string = buildDecimals(decimals_number); 
+
+    			return hundreds_string+''+decimals_number;
+    		}  
+    		if (tmp_string.length > 2 && tmp_string.length < 4){
+    			displayOutput('we are in a case where there is only one hundred  ') ;
+    			// it has at least a hundred in there 
+    			// tmp_string = reverseString(tmp_string);  
+    			 // now we have a reversed string  ....  
+    			 // we are trying to find how many hundreds are there 
+    			 // so we should take only the 4th caracter as string 
+    			 // and the rest will be sent to the decimals function
+    			 hundreds_string = tmp_string; 
+    			 hundreds_string = tmp_string.substring(0,1);
+    			 tmp_string = reverseString(tmp_string) ; 
+    			 tmp_string = tmp_string.substring(0,2);
+    			 // now we send the numbers  to the other function
+    			 // and it will take care of it  
+    			 decimals_number = parseInt(tmp_string); 
+    			 hundreds_number = parseInt(hundreds_string);
+
+
+    			 decimals_string = buildDecimals(decimals_number); 
+    			 hundreds_string = buildDecimals(hundreds_number); 
+
+				// we should have something like five hundred and twenty 
+    		
+    			 return hundreds_string+''+decimals_number; 
+
+    		}else{
+    			// in this case the decimals function will take 
+    			// care on the concept 
+    			// then we will send just the number 
+    			 stringtoDisplay = buildDecimals(argument); 
+    		} 
+
+
 
     	}
+    	// take the full number and return only a string to display for 
+    	// numbers between 0 and 99  
+    	function buildDecimals(argument){
+    		var tmp_string,
+    			units,
+    			decimals, 
+    			stringtoDisplay=''; // final string that should be returned 
+
+			// convert the number to a string and take only numbers less than 99 
+			tmp_string = parseString(argument);
+			//now we have a string we will subsString the two first and then reverse them
+			tmp_string = reverseString(tmp_string); // we have the number 
+			tmp_string = tmp_string.substring(0, 2);
+			tmp_string =reverseString(tmp_string); 
+
+			// now as we have the number we will try to map it with 
+			// and find the matching string on the table 
+			// if we found the match we will return the string like it is 
+			// if we dont find the match its a value that should be combined 
+			// the units and the decimals will get values and then 
+			// we will concatenate them and return them in one string
+			//alert('tmp_string value before simple find value is '+tmp_string); 
+			tmp_string =simpleFindNumber(tmp_string); 
+			//alert('tmp_string value after simple find value is '+tmp_string);
+			// if we found the number then we will return it ! 
+			// we will check if now tmp_string is not Nan using isNan(); 
+			if (typeof(tmp_string)!== 'undefined' ){
+				// then we will return the tmp_string and we are done  
+				return tmp_string; 
+				// the function will stop running here 
+			}		
+			// then we will return the combined strings 
+			var tmp = parseString(argument); 
+				tmp = reverseString(tmp);
+
+			units = tmp.substring(0,1) ;
+			decimals = tmp.substring(1,2);
+			decimals = decimals+'0' ; // adding zero for mapping 
+			units = simpleFindNumber(units); 
+			decimals = simpleFindNumber(decimals);
+			tmp_string = decimals+' '+units;  
+			return tmp_string; 
+			// now we have something like twenty one !!
+			// or something like ninety three 
+    	} 
+    	function buildStringOutput(a,b,c,d){
+    		//a = units
+    		//b= hundreds 
+    		//c = thousands
+    		//d =milions
+    		var output = ''; 
+    			output = d +' thousands '+c+' hundred ';
+
+    			//displayOutput(output); 
+    	}
+
     	function reverseString (argument) {
     		// body...
     		return argument.split("").reverse().join("");
     	}
-    	function buildText(number,prefix){
+    	function simpleFindNumber(argument){
+    		var number = parseInt(argument);
+    		if(number>0){
+    			var resultString= findNumber(number,$(opts.dictionnary1),$(opts.dictionnary2));	 
+    			return (resultString) ; // twenty thousands 
+    		}else {
+    			return undefined;
+    		}
+    	}
+    	function builThousandsFinalText(number,prefix){
     		if(number>0){
     			number= findNumber(number,$(opts.dictionnary1),$(opts.dictionnary2));
     			return (number + prefix ) ; // twenty thousands 
     		}else {
-    			return NaN;
+    			return undefined;
     		}
     	}
     	function findNumber (argument,dictionnary1,dictionnary2) {
@@ -86,28 +187,22 @@ $.fn.numbertoString = function(options) {
 			var  positionArray1 = $.inArray ( argument ,dictionnary1,dictionnary2);
 			var  val = dictionnary2[positionArray1];
 				 return (val);
-		
     	}
-
     	function displayOutput (argument) {
     		// body... 
     		$(opts.divMessage).text(''); 
     		$(opts.divMessage).text(argument) ;  
     		return ;// exit fromt the function 
-
     	}
     	function detectNumber (offset,argument) {
     		// body...
     		var offsetNumber = offset, 
     			original_number = argument; 
     			var tmp_unit = getUnits(original_number);
-
     			alert('the units are ' + tmp_unit); 
-
     	}
     	
     	// get the length of the converted number to string 
-    	
     	function parseString (argument) {
     		var loops = argument;
     			loops = new Number(loops); 
@@ -116,7 +211,6 @@ $.fn.numbertoString = function(options) {
     			// now we have the range of the number 
     			// we can use a reverse loop for the offset 
     	}
- 	
 		function getUnits(num) {
 			return num%10; 
 		}
@@ -132,7 +226,6 @@ $.fn.numbertoString = function(options) {
 	    function getNumber (argument) {
  			return argument  ; 
 	    }
-
   });
 
   return this;
@@ -175,7 +268,7 @@ $.fn.numbertoString.defaults = {
 					10000,
 					100000], 
 					dictionnary2:[
-						's',
+						'zero',
 						'one', 
 						'two',
 						'three',
