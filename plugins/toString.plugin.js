@@ -22,7 +22,7 @@ $.fn.numbertoString = function(options) {
     $(opts.trigger).click(function(){ 
     	var a= $(opts.theNumber).val();
     		a = getNumber(a); 
-    	mapping() ; 
+    	mapping() ;
 
     }); // end click function 
     	function mapping(){
@@ -41,12 +41,9 @@ $.fn.numbertoString = function(options) {
 
  			var val = buildHundreds(myValue); 
  				displayOutput(val);
-
+         testCase(0,999); 
  			//building a test case  
- 			for (var i = 0; i < 999; i++) {
- 				var val = buildHundreds(i); 
- 				displayOutput(val);
- 			};
+ 			
 
  			
 
@@ -59,7 +56,12 @@ $.fn.numbertoString = function(options) {
     	// and gives the 0 00 two last digits to buildDecimals 
     	// receive the full number  
     	// then return a bigger string to display 
-
+        function testCase (min,max){
+          for (var i = min; i < max; i++) {
+            var val = buildHundreds(i); 
+            displayOutput(val);
+          };  
+        }
     	function buildHundreds(argument){
 
     		var tmp_string = '',
