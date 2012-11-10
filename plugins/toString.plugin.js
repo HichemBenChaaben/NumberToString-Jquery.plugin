@@ -232,14 +232,6 @@ $.fn.numbertoString = function(options) {
     		$(opts.divMessage).prepend('</hr><br/>') ; 
     		return ;// exit fromt the function 
     	}
-    	function detectNumber (offset,argument) {
-    		// body...
-    		var offsetNumber = offset, 
-    			original_number = argument; 
-    			var tmp_unit = getUnits(original_number);
-    			alert('the units are ' + tmp_unit); 
-    	}
-    	
     	// get the length of the converted number to string 
     	function parseString (argument) {
     		var st = argument;
@@ -263,7 +255,6 @@ $.fn.numbertoString = function(options) {
  			return argument  ; 
 	    }
   });
-
   return this;
 };
 
