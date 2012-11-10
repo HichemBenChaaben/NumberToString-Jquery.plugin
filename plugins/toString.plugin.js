@@ -58,9 +58,6 @@ $.fn.numbertoString = function(options) {
         function buildUpperCase(argument){
             return argument.toUpperCase(); 
         }
-        function eval_lang(argument){
-
-        }
         function showError(){ 
             displayOutput('there is errors on the page,check the script'); 
         }
@@ -263,7 +260,37 @@ $.fn.numbertoString.defaults = {
   trigger: '#getSting',
   theNumber : '#my_number',
   divMessage:'#messages',
-  lang : '',  // no language you need to set it up  
+  lang : '',  // no language you need to set it up 
+  dict_syntax_eng:[
+    ' and ', // seperator
+    'hundred', // hundreds
+    'thousand', // thousand
+    's' // multiple units 
+    ],
+dict_syntax_ar:[
+    ' and ', // seperator
+    ' hundred', // hundreds
+    'thousand', // thousand
+    's' // multiple units 
+], 
+dict_syntax_fr:[
+    ' et ', // seperator
+    ' cent ', // hundreds
+    ' mille ', // thousand
+    's' // multiple units 
+], 
+dict_syntax_ger:[
+    ' and ', // seperator
+    ' hundred', // hundreds
+    'thousand', // thousand
+    's' // multiple units 
+], 
+dict_syntax_it:[
+    ' and ', // seperator
+    ' hundred', // hundreds
+    ' thousand', // thousand
+    's' // multiple units 
+], 
   dict_numbers:[0,1,
 					2,
 					3,
@@ -295,36 +322,6 @@ $.fn.numbertoString.defaults = {
 					1000,
 					10000,
 					100000],
-dict_syntax_eng:[
-    ' and ', // seperator
-    'hundred', // hundreds
-    'thousand', // thousand
-    's' // multiple units 
-    ],
-dict_syntax_ar:[
-    ' and ', // seperator
-    'hundred', // hundreds
-    'thousand', // thousand
-    's' // multiple units 
-], 
-dict_syntax_fr:[
-    ' et ', // seperator
-    'cent', // hundreds
-    'mille', // thousand
-    's' // multiple units 
-], 
-dict_syntax_ger:[
-    ' and ', // seperator
-    'hundred', // hundreds
-    'thousand', // thousand
-    's' // multiple units 
-], 
-dict_syntax_it:[
-    ' and ', // seperator
-    'hundred', // hundreds
-    'thousand', // thousand
-    's' // multiple units 
-],
 dict_eng:[
 		'zero',
 		'one', 
