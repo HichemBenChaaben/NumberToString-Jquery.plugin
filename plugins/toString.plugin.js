@@ -290,31 +290,31 @@ $.fn.numbertoString.defaults = {
 dict_syntax_eng:[
     ' and ', // seperator
     'hundred', // hundreds
-    'thousand' // thousand
+    'thousand', // thousand
     's' // multiple units 
     ],
 dict_syntax_ar:[
     ' and ', // seperator
     'hundred', // hundreds
-    'thousand' // thousand
+    'thousand', // thousand
     's' // multiple units 
 ], 
 dict_syntax_fr:[
     ' and ', // seperator
     'hundred', // hundreds
-    'thousand' // thousand
+    'thousand', // thousand
     's' // multiple units 
 ], 
 dict_syntax_ger:[
     ' and ', // seperator
     'hundred', // hundreds
-    'thousand' // thousand
+    'thousand', // thousand
     's' // multiple units 
 ], 
 dict_syntax_it:[
     ' and ', // seperator
     'hundred', // hundreds
-    'thousand' // thousand
+    'thousand', // thousand
     's' // multiple units 
 ],
 dict_eng:[
