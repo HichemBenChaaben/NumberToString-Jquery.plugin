@@ -11,32 +11,41 @@ $.fn.numbertoString = function(options) {
   var opts = $.extend(true, {}, $.fn.numbertoString.defaults, options);
   this.each(function() {
     var e = $(this), 
-        dict_display_lang = opts.lang ;
-        alert(opts.lang) 
-       
+        dict_display_lang = opts.lang,
+        dict_syntax_lang = ''; 
+
         switch ( dict_display_lang.toUpperCase() ){
             case 'AR' :
-                dict_display_lang = $(opts.dict_ar); 
-                lang_thousands = 'thousands in arabix';
-                lang_hundreds = 'hundreds in arabic'; 
-                lang_multiple = 's in arabic';  
+                dict_display_lang = $(opts.dict_ar);
+                dict_syntax_lang  = $(opts.dict_syntax_ar); 
                 break;
             case 'EN':
-                dict_display_lang = $(opts.dict_eng);  break;
-                lang_thousands = 'thousands' ; 
-                lang_hundreds = 'hundred';
-                lang_multiple = 's'; 
+                dict_display_lang = $(opts.dict_eng); 
+                dict_syntax_lang  = $(opts.dict_syntax_eng); 
+                break;
             case 'FR' :
-                dict_display_lang = $(opts.dict_fr); break;
+                dict_display_lang = $(opts.dict_fr);
+                dict_syntax_lang  = $(opts.dict_syntax_fr); 
+                break;
             case 'GER' :
-                dict_display_lang = $(opts.dict_ger); break;
+                dict_display_lang = $(opts.dict_ger);
+                dict_syntax_lang  = $(opts.dict_syntax_ger); 
+                break;
             case 'IT' :
-                dict_display_lang = $(opts.dict_it); break;
+                dict_display_lang = $(opts.dict_it);
+                dict_syntax_lang  = $(opts.dict_syntax_it); 
+                break;
             default:
                 dict_display_lang = $(opts.dict_eng);
+                dict_syntax_lang  = $(opts.dict_syntax_en); 
         }
-    /// in this case the default dictionnary is eng 
-	
+    // build the var dictionnary multiple hundred thousands and the seperator 
+    var lang_seperator = dict_syntax_lang[0],  
+        lang_hundred   = dict_syntax_lang[1], 
+        lang_thousand  = dict_syntax_lang[2], 
+        lang_multiple  = dict_syntax_lang[3]; 
+
+    /// in this case the default dictionnary is eng
     // window.onerror = showError();  // handle the errors on the window 
 
     $(opts.trigger).click(function(){ 
@@ -108,8 +117,7 @@ $.fn.numbertoString = function(options) {
     			hundreds_string = '',
     			decimals_string = '',
     			decimals_number , 
-    			stringtoDisplay = '', 
-    			seperator_eng= ' and '; 
+    			stringtoDisplay = ''; 
 
     		tmp_string = parseString(argument); 
     		s_lenght = tmp_string.length; 
@@ -136,7 +144,7 @@ $.fn.numbertoString = function(options) {
     			 hundreds_string = tmp_string.substring(0,1);
     			 hundreds_number = parseInt(hundreds_string);
     			 hundreds_string = buildDecimals(hundreds_number);
- 				 hundreds_string = hundreds_string+' hundred ' ;
+ 				 hundreds_string = hundreds_string + lang_hundred ;
     			 tmp_string = reverseString(tmp_string) ; 
     			 decimals_string = tmp_string.substring(0,2); 
     			 decimals_string = reverseString(tmp_string); 
@@ -144,7 +152,7 @@ $.fn.numbertoString = function(options) {
     			 decimals_string = buildDecimals(decimals_number);
     			 // now we send the numbers  to the other function
     			 // and it will take care of it  
-  				return hundreds_string+seperator_eng+decimals_string; 
+  				return hundreds_string+lang_seperator+decimals_string; 
     			 
     		} else {
     			// in this case the decimals function will take 
@@ -300,9 +308,9 @@ dict_syntax_ar:[
     's' // multiple units 
 ], 
 dict_syntax_fr:[
-    ' and ', // seperator
-    'hundred', // hundreds
-    'thousand', // thousand
+    ' et ', // seperator
+    'cent', // hundreds
+    'mille', // thousand
     's' // multiple units 
 ], 
 dict_syntax_ger:[
