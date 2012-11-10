@@ -60,7 +60,6 @@ $.fn.numbertoString = function(options) {
     	 	 mappingString = dict_display_lang,  // choose the selected language 
     	 	 myValue 	   = getNumber($(opts.theNumber).val()), 
 			 textprefix    = ' and ', 
-			 many 	 	   = 's', 
 			 stringOutput  = 'this is going to be the final output',
 			 stringLength  = 0, // by default this element is set to 0
 			 mappedvalue   = '';
@@ -328,9 +327,12 @@ dict_eng:[
 						'thousand',
 						'million',
 						'billion'
-						], 
-
-
+						],
+dict_seperator_eng:[' and '],
+dict_seperator_ar:[], 
+dict_seperator_fr:[' et '],
+dict_seperator_ger:[' und '],
+dict_seperator_it:[' e '],    
 dict_ar:[
         'واحد', 
         'اثنين',
