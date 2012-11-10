@@ -31,6 +31,22 @@ $.fn.numbertoString = function(options) {
             lang_hundred = opts.dict_syntax_eng [1] ;// the one from dictionnary 
             lang_thousand = opts.dict_syntax_eng [2] ; // the one from the dictionnary
             lang_multiple = opts.dict_syntax_eng [3]; 
+        }else if (lang == 'FR'){
+            lang_seperator = opts.dict_syntax_fr [0];// the one from dictionnary 
+            lang_hundred = opts.dict_syntax_fr [1] ;// the one from dictionnary 
+            lang_thousand = opts.dict_syntax_fr[2] ; // the one from the dictionnary
+            lang_multiple = opts.dict_syntax_fr[3]; 
+
+        } else if( lang == 'AR'){
+            lang_seperator = opts.dict_syntax_ar [0];// the one from dictionnary 
+            lang_hundred = opts.dict_syntax_ar[1] ;// the one from dictionnary 
+            lang_thousand = opts.dict_syntax_ar [2] ; // the one from the dictionnary
+            lang_multiple = opts.dict_syntax_ar[3]; 
+        }else if (lang == 'GER'){
+            lang_seperator = opts.dict_syntax_ger [0];// the one from dictionnary 
+            lang_hundred = opts.dict_syntax_ger[1] ;// the one from dictionnary 
+            lang_thousand = opts.dict_syntax_ger[2] ; // the one from the dictionnary
+            lang_multiple = opts.dict_syntax_ger[3]; 
         }
         // we have variables ready 
         // now we can build the string in any different language 
