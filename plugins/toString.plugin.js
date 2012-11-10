@@ -11,7 +11,6 @@ $.fn.numbertoString = function(options) {
   var opts = $.extend(true, {}, $.fn.numbertoString.defaults, options);
   this.each(function() {
 
-
     var e = $(this),   
         dict_display_lang = opts.lang, //language shoosen 
         lang = opts.lang.toUpperCase(), 
@@ -22,14 +21,15 @@ $.fn.numbertoString = function(options) {
         lang_thousand, // the one from dictionnary 
         lang_hundred, // the one from dictionnary 
         lang_decimals, // the one from the dictionnary
-        lang_seperator;
+        lang_seperator, 
+        lang_multiple;
 
         pickLanguage(); // function helps to pick a selected language they manip global scope vars 
          // choose the syntax for the current dict 
         if (lang == 'ENG'){ 
             lang_seperator = opts.dict_syntax_eng [0];// the one from dictionnary 
             lang_hundred = opts.dict_syntax_eng [1] ;// the one from dictionnary 
-            lang_decimals = opts.dict_syntax_eng [2] ; // the one from the dictionnary
+            lang_thousand = opts.dict_syntax_eng [2] ; // the one from the dictionnary
             lang_multiple = opts.dict_syntax_eng [3]; 
         }
         // we have variables ready 
@@ -88,9 +88,9 @@ $.fn.numbertoString = function(options) {
             
             // m will hold how many numbers are in the string actually 
 
-            var val = buildHundreds(myValue); 
+            var val = buildThousands(myValue); // build thousands will handle all numbers 
                 displayOutput(val);
-                testCase(0,200); //going to test the numbers from 0 to 999 
+                testCase(0,2000); //going to test the numbers from 0 to 999 
             //building a test case  
             /*  var val = buildDecimals(myValue);
                       displayOutput(val); 
@@ -109,28 +109,64 @@ $.fn.numbertoString = function(options) {
         }
         function testCase (min,max){
           for (var i = min; i < max; i++) {
-            var val = buildHundreds(i); 
+            var val = buildThousands(i); 
             displayOutput(val);
           };  
         }
         function buildThousands(argument){
-            var tmp_string = '',
-                thousands_string = '',
-            tmp_string = parseString(argument); 
-            s_lenght = tmp_string.length;
-            // test the length of the string if its less than a thousand 
-            // send the thing to the other function 
-            // otherwise manipulate the big numbers seperately 
-            if( s_lenght > 4 ) { 
-                thousands_string = buildHundreds(thousands_string)
-             } else {
-                var thousand_stringp1 = tmp_string.split(), // split at characted 4 
-                    thousand_stringp2 = tmp_string.split(); // split at the rest of the rest of the characters 
+            
+            // argument comes as an int  number
 
-                thousand_stringp2 = buildHundreds(thousand_stringp2) ; 
-                thousand_stringp1 = buildHundreds(thousand_stringp1) ; 
-                return thousand_stringp2 + thousand_stringp1; 
-             }
+            var tmp_string = parseString(argument),  
+                s_length = tmp_string.length,
+                thousands_string,
+                hundreds_string,
+                thousands_number,
+                hundreds_number; 
+                //some tests 
+
+                if(s_length < 4 ){
+
+                  thousands_string = buildHundreds(argument);
+                  return thousands_string ; 
+                  
+
+                }
+                else{  
+                    if ( s_length < 7){ 
+                        
+                        // a number with 6 digits or 5 digits  500 000  
+                        // we will split the string into 2 
+                        // the first part will handeled completely by buildHundreds function 
+                        // the second part is the same but we will add a 'thousand' to it 
+                        // tmp_string = reverseString(tmp_string);
+                        tmp_string = reverseString (tmp_string); 
+                        hundreds_string  = tmp_string.substring(0,3); // it will have the first part of the string 
+                        //hundreds_string = reverseString(hundreds_string); 
+
+                        //tmp_string = reverseString (tmp_string); 
+                        thousands_string = tmp_string.substring(s_length+3,s_length-1); ; // it will have the rest of the string 
+                        thousands_string = reverseString (thousands_string);
+
+                        hundreds_number  = parseInt(hundreds_string);
+                        thousands_number = parseInt(thousands_string); 
+                        console.log('the thousands number is +'+thousands_number);
+                        console.log('the hundreds number is +'+hundreds_number);
+                        thousands_string = buildHundreds (thousands_number);
+                        hundreds_string  = buildHundreds (hundreds_number);
+                       
+                        if(thousands_number == 1){
+                            lang_multiple ='' ;
+                        }
+
+                    return thousands_string + lang_thousand +lang_multiple + lang_seperator + hundreds_string; // return the full result 
+
+                    } else { 
+                        // do nothing for the moment 
+                        console.log (' out of range') ; 
+                    }
+                }
+
         }
         function buildHundreds(argument){
             var sefl = this,
@@ -288,7 +324,7 @@ $.fn.numbertoString.defaults = {
 dict_syntax_eng:[
     ' and ', // seperator
     ' hundred', // hundreds
-    'thousand', // thousand
+    ' thousand ', // thousand
     's' // multiple units 
     ],
 dict_syntax_ar:[
