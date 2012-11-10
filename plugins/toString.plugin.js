@@ -4,31 +4,60 @@
 // usage 
 // select a div 
 // apply goString 
-
-
-(function($) {
+;(function($) {
 // What does the numbertoString plugin do?
 $.fn.numbertoString = function(options) {
   if (!this.length) { return this; }
   var opts = $.extend(true, {}, $.fn.numbertoString.defaults, options);
-
   this.each(function() {
-
-  	 window.onerror=function(){
-  	 	displayOutput('there is some errors on the webpage '); 
-  	 } 
-    var e = $(this);
+    var e = $(this), 
+        dict_display_lang = opts.lang ;
+        alert(opts.lang) 
+       
+        switch ( dict_display_lang.toUpperCase() ){
+            case 'AR' :
+                dict_display_lang = $(opts.dict_ar); 
+                lang_thousands = 'thousands in arabix';
+                lang_hundreds = 'hundreds in arabic'; 
+                lang_multiple = 's in arabic';  
+                break;
+            case 'EN':
+                dict_display_lang = $(opts.dict_eng);  break;
+                lang_thousands = 'thousands' ; 
+                lang_hundreds = 'hundred';
+                lang_multiple = 's'; 
+            case 'FR' :
+                dict_display_lang = $(opts.dict_fr); break;
+            case 'GER' :
+                dict_display_lang = $(opts.dict_ger); break;
+            case 'IT' :
+                dict_display_lang = $(opts.dict_it); break;
+            default:
+                dict_display_lang = $(opts.dict_eng);
+        }
+    /// in this case the default dictionnary is eng 
+	
+    // window.onerror = showError();  // handle the errors on the window 
 
     $(opts.trigger).click(function(){ 
-    	var a= $(opts.theNumber).val();
+    	var a = $(opts.theNumber).val() ; 
     		a = getNumber(a); 
-    	mapping() ;
+        	mapping() ; //main function to trigger all functions 
 
     }); // end click function 
-    	function mapping(){
-    	
-    	 var mappingNumber = $(opts.dictionnary1), 
-    	 	 mappingString = $(opts.dictionnary2), 
+
+        function buildUpperCase(argument){
+            return argument.toUpperCase(); 
+        }
+        function eval_lang(argument){
+
+        }
+        function showError(){ 
+            displayOutput('there is errors on the page,check the script'); 
+        }
+    	function mapping(){ 	
+    	 var mappingNumber = $(opts.dict_numbers), // only one dictionnary 
+    	 	 mappingString = dict_display_lang,  // choose the selected language 
     	 	 myValue 	   = getNumber($(opts.theNumber).val()), 
 			 textprefix    = ' and ', 
 			 many 	 	   = 's', 
@@ -37,21 +66,15 @@ $.fn.numbertoString = function(options) {
 			 mappedvalue   = '';
 			
 			// m will hold how many numbers are in the string actually 
- 			
 
  			var val = buildHundreds(myValue); 
  				displayOutput(val);
-         testCase(0,999); 
+                testCase(0,999); //going to test the numbers from 0 to 999 
  			//building a test case  
- 			
-
- 			
-
 			/*	var val = buildDecimals(myValue);
 					  displayOutput(val); 
 					  */
     	}
-
     	// take the full number check how many thousands in there 
     	// and gives the 0 00 two last digits to buildDecimals 
     	// receive the full number  
@@ -62,8 +85,26 @@ $.fn.numbertoString = function(options) {
             displayOutput(val);
           };  
         }
-    	function buildHundreds(argument){
+        function buildThousands(argument){
+            var tmp_string = '',
+                thousands_string = '',
+            tmp_string = parseString(argument); 
+            s_lenght = tmp_string.length;
+            // test the length of the string if its less than a thousand 
+            // send the thing to the other function 
+            // otherwise manipulate the big numbers seperately 
+            if( s_lenght > 4 ) { 
+                thousands_string = buildHundreds(thousands_string)
+             } else {
+                var thousand_stringp1 = tmp_string.split(), // split at characted 4 
+                    thousand_stringp2 = tmp_string.split(); // split at the rest of the rest of the characters 
 
+                thousand_stringp2 = buildHundreds(thousand_stringp2) ; 
+                thousand_stringp1 = buildHundreds(thousand_stringp1) ; 
+                return thousand_stringp2 + thousand_stringp1; 
+             }
+        }
+    	function buildHundreds(argument){
     		var tmp_string = '',
     			hundreds_string = '',
     			decimals_string = '',
@@ -97,27 +138,21 @@ $.fn.numbertoString = function(options) {
     			 hundreds_number = parseInt(hundreds_string);
     			 hundreds_string = buildDecimals(hundreds_number);
  				 hundreds_string = hundreds_string+' hundred ' ;
-
     			 tmp_string = reverseString(tmp_string) ; 
     			 decimals_string = tmp_string.substring(0,2); 
     			 decimals_string = reverseString(tmp_string); 
     			 decimals_number = parseInt(decimals_string); 
     			 decimals_string = buildDecimals(decimals_number);
-
     			 // now we send the numbers  to the other function
     			 // and it will take care of it  
   				return hundreds_string+seperator_eng+decimals_string; 
-    			  
-  
-    		}else{
+    			 
+    		} else {
     			// in this case the decimals function will take 
     			// care on the concept 
     			// then we will send just the number 
     			 stringtoDisplay = buildDecimals(argument); 
     		} 
-
-
-
     	}
     	// take the full number and return only a string to display for 
     	// numbers between 0 and 99  
@@ -126,14 +161,12 @@ $.fn.numbertoString = function(options) {
     			units,
     			decimals, 
     			stringtoDisplay=''; // final string that should be returned 
-
 			// convert the number to a string and take only numbers less than 99 
 			tmp_string = parseString(argument);
 			//now we have a string we will subsString the two first and then reverse them
 			tmp_string = reverseString(tmp_string); // we have the number 
 			tmp_string = tmp_string.substring(0, 2);
 			tmp_string =reverseString(tmp_string); 
-
 			// now as we have the number we will try to map it with 
 			// and find the matching string on the table 
 			// if we found the match we will return the string like it is 
@@ -164,17 +197,7 @@ $.fn.numbertoString = function(options) {
 			// now we have something like twenty one !!
 			// or something like ninety three 
     	} 
-    	function buildStringOutput(a,b,c,d){
-    		//a = units
-    		//b= hundreds 
-    		//c = thousands
-    		//d =milions
-    		var output = ''; 
-    			output = d +' thousands '+c+' hundred ';
-
-    			//displayOutput(output); 
-    	}
-
+    	
     	function reverseString (argument) {
     		// body...
     		return argument.split("").reverse().join("");
@@ -182,7 +205,7 @@ $.fn.numbertoString = function(options) {
     	function simpleFindNumber(argument){
     		var number = parseInt(argument);
     		if(number>0){
-    			var resultString= findNumber(number,$(opts.dictionnary1),$(opts.dictionnary2));	 
+    			var resultString= findNumber(number,$(opts.dict_numbers),dict_display_lang);	 
     			return (resultString) ; // twenty thousands 
     		}else {
     			return undefined;
@@ -190,16 +213,16 @@ $.fn.numbertoString = function(options) {
     	}
     	function builThousandsFinalText(number,prefix){
     		if(number>0){
-    			number= findNumber(number,$(opts.dictionnary1),$(opts.dictionnary2));
+    			number= findNumber(number,$(opts.dict_numbers),dict_display_lang);
     			return (number + prefix ) ; // twenty thousands 
     		}else {
     			return undefined;
     		}
     	}
-    	function findNumber (argument,dictionnary1,dictionnary2) {
+    	function findNumber (argument,dict_numbers,dict_display_lang) {
     		// return the value from array 2 passed by array 
-			var  positionArray1 = $.inArray ( argument ,dictionnary1,dictionnary2);
-			var  val = dictionnary2[positionArray1];
+			var  positionArray1 = $.inArray ( argument ,dict_numbers,dict_display_lang);
+			var  val = dict_display_lang[positionArray1];
 				 return (val);
     	}
     	function displayOutput (argument) {
@@ -219,12 +242,10 @@ $.fn.numbertoString = function(options) {
     	
     	// get the length of the converted number to string 
     	function parseString (argument) {
-    		var loops = argument;
-    			loops = new Number(loops); 
-    			loops = loops.toString(); 
-    			return loops; 
-    			// now we have the range of the number 
-    			// we can use a reverse loop for the offset 
+    		var st = argument;
+    			st = new Number(st); 
+    			st = st.toString(); 
+    			return st; 
     	}
 		function getUnits(num) {
 			return num%10; 
@@ -250,8 +271,9 @@ $.fn.numbertoString = function(options) {
 $.fn.numbertoString.defaults = {
   trigger: '#getSting',
   theNumber : '#my_number',
-  divMessage:'#messages', 
-  dictionnary1:[0,1,
+  divMessage:'#messages',
+  lang : '',  // no language you need to set it up  
+  dict_numbers:[0,1,
 					2,
 					3,
 					4,
@@ -282,7 +304,7 @@ $.fn.numbertoString.defaults = {
 					1000,
 					10000,
 					100000], 
-					dictionnary2:[
+dict_eng:[
 						'zero',
 						'one', 
 						'two',
@@ -315,6 +337,75 @@ $.fn.numbertoString.defaults = {
 						'thousand',
 						'million',
 						'billion'
-						]};
+						], 
 
+
+dict_ar:[
+        'واحد', 
+        'اثنين',
+        'ثلاثة',
+        'أربعة',
+        'خمسة',
+        'ستة',
+        'سبعة',
+        'ثمانية',
+        'تسعة',
+        'عشرة',
+        'أحد عشر',
+        'الاثني عشر',
+        'ثلاثة عشر',
+        'أربعة عشر',
+        'خمسة عشر',
+        'ست عشرة',
+        'سبعة عشر',
+        'ثمانية عشر',
+        'تسعة عشر', // nineteen is wrong 
+        'عشرون',
+        'ثلاثون',
+        'أربعين',
+        'خمسون',
+        'ستون',
+        'سبعون',
+        'ثمانون',
+        'تسعون',
+        'مئات',
+        'ألف',
+        'مليون',
+        'بليون'
+    ], 
+    dict_fr :[
+    "zéro",
+    "un",
+    "deux",
+    "trois",
+    "quatre",
+    "cinq",
+    "six",
+    "sept",
+    "huit",
+    "neuf",
+    "dix",
+    "onze",
+    "douze",
+    "treize",
+    "quatorze",
+    "quinze",
+    "seize",
+    "dix-sept",
+    "dix-huit",
+    "dix-neuf",
+    "vingt",
+    "trente",
+    "quarante",
+    "cinquante",
+    "soixante",
+    "soixante-dix",
+    "quatre-vingts",
+    "quatre vingt dix",
+    "cent",
+    "mille",
+    "million",
+    "milliard"
+]
+};
 })(jQuery);
