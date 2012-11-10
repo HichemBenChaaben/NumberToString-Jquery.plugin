@@ -4,6 +4,7 @@
 // usage 
 // select a div 
 // apply goString 
+
 ;(function($) {
 // What does the numbertoString plugin do?
 $.fn.numbertoString = function(options) {
@@ -11,8 +12,8 @@ $.fn.numbertoString = function(options) {
   var opts = $.extend(true, {}, $.fn.numbertoString.defaults, options);
   this.each(function() {
 
-
-    var e = $(this),   
+    var e = $(this),
+        a = $(opts.theNumber).val() ,   
         dict_display_lang = opts.lang, //language shoosen 
         lang = opts.lang.toUpperCase(), 
         dict_syntax_lang ,// dictionnary syntax choosen  
@@ -68,8 +69,11 @@ $.fn.numbertoString = function(options) {
         }
 
 
-    $(opts.trigger).click(function(){ 
-    	var a = $(opts.theNumber).val() ; 
+   
+
+    $(opts.trigger).click(function(){
+    	$(opts.divMessage).text('plugin working fine 1!! ') ; 
+    	var a= $(opts.theNumber).val();
     		a = getNumber(a); 
         	mapping() ; //main function to trigger all functions 
             // building the final string in selected language  
@@ -87,6 +91,63 @@ $.fn.numbertoString = function(options) {
 			 mappedvalue   = '';
 			
 			// m will hold how many numbers are in the string actually 
+ 			var stringArray = parseString(myValue); 
+
+ 			var unitsString = stringArray ; 
+ 				unitsString = unitsString.substring(0,2);
+
+ 			var hundredsString = reverseString(stringArray); 
+ 				hundredsString = hundredsString.substring(2, 3); 
+
+ 			var thousandsString = reverseString(stringArray); 
+ 				thousandsString = thousandsString.substring(3,6);
+ 			
+ 			alert('the units are '+unitsString);
+ 			alert('the hundreds are '+hundredsString) ;
+ 			alert('the thousands are '+thousandsString); 
+ 			 
+ 			 for (var i = 0 ; i < stringArray.length; i++) { 
+ 			 
+ 			 	var counter = 0 ,
+ 			 		prefix_thousands = ' thousands', 
+ 			 		prefix_hundreds = ' hundreds '; 
+ 			 		num_thousands = getThousands(parseInt(stringArray));
+ 			 		//alert('the numbers there are '+ stringArray[i]); 
+ 			 }; 
+
+ 			 // mapping the number with the table 
+ 			 // building the string output
+ 			 stringOutput =  buildText(num_thousands,prefix_thousands);
+ 			 // will return how many thousands on the string 
+ 			 // display the full string output 
+ 			 displayOutput(stringOutput);
+
+    	}
+    	function reverseString (argument) {
+    		// body...
+    		return argument.split("").reverse().join("");
+    	}
+    	function buildText(number,prefix){
+    		if(number>0){
+    			number= findNumber(number,$(opts.dictionnary1),$(opts.dictionnary2));
+    			return (number + prefix ) ; // twenty thousands 
+    		}else {
+    			return NaN;
+    		}
+    	}
+    	function findNumber (argument,dictionnary1,dictionnary2) {
+    		// return the value from array 2 passed by array 
+			var  positionArray1 = $.inArray ( argument ,dictionnary1,dictionnary2);
+			var  val = dictionnary2[positionArray1];
+				 return (val);
+		
+    	}
+
+    	function displayOutput (argument) {
+    		// body... 
+    		$(opts.divMessage).text(''); 
+    		$(opts.divMessage).text(argument) ;  
+    		return ;// exit fromt the function 
 
  			var val = buildHundreds(myValue); 
  				displayOutput(val);
@@ -480,6 +541,5 @@ dict_ger:[
     "tausend",
     "Millionen",
     "billion"
-]
-};
+]};
 })(jQuery);
