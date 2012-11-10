@@ -238,13 +238,6 @@ $.fn.numbertoString = function(options) {
     			st = st.toString(); 
     			return st; 
     	}
-		function getUnits(num) {
-			return num%10; 
-		}
-		function getThousands (argument) {
-		 	// body...
-		 	return ((argument / 1000) >0 ? argument /1000 : 0); 
-		 } 
 	    function displayerror (argument) {
 	    	var errorMessage = ' please choose a valid number ';
 	 		argument.text('').text(errorMessage);
