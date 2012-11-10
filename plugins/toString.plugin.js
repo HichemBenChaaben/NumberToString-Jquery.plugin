@@ -1,9 +1,9 @@
 // jquery plugin to convert numbers to String 
 // multilanguage support 
 // Author Hichem Ben Chaabene 
-// usage 
-// select a div 
-// apply goString 
+// supported languages for the moment 
+// english 
+//  more updates are coming up 
 ;(function($) {
 // What does the numbertoString plugin do?
 $.fn.numbertoString = function(options) {
