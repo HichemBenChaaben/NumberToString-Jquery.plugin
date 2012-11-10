@@ -10,62 +10,78 @@ $.fn.numbertoString = function(options) {
   if (!this.length) { return this; }
   var opts = $.extend(true, {}, $.fn.numbertoString.defaults, options);
   this.each(function() {
-    var e = $(this), 
-        dict_display_lang = opts.lang,
-        dict_syntax_lang = ''; 
 
-        switch ( dict_display_lang.toUpperCase() ){
-            case 'AR' :
-                dict_display_lang = $(opts.dict_ar);
-                dict_syntax_lang  = $(opts.dict_syntax_ar); 
-                break;
-            case 'EN':
-                dict_display_lang = $(opts.dict_eng); 
-                dict_syntax_lang  = $(opts.dict_syntax_eng); 
-                break;
-            case 'FR' :
-                dict_display_lang = $(opts.dict_fr);
-                dict_syntax_lang  = $(opts.dict_syntax_fr); 
-                break;
-            case 'GER' :
-                dict_display_lang = $(opts.dict_ger);
-                dict_syntax_lang  = $(opts.dict_syntax_ger); 
-                break;
-            case 'IT' :
-                dict_display_lang = $(opts.dict_it);
-                dict_syntax_lang  = $(opts.dict_syntax_it); 
-                break;
-            default:
-                dict_display_lang = $(opts.dict_eng);
-                dict_syntax_lang  = $(opts.dict_syntax_en); 
+
+    var e = $(this),   
+        dict_display_lang = opts.lang, //language shoosen 
+        lang = opts.lang.toUpperCase(), 
+        dict_syntax_lang ,// dictionnary syntax choosen  
+        total_thousands, // the unit translated 
+        total_hundreds,    // the unit translated
+        total_decimals,  // the unit translatd
+        lang_thousand, // the one from dictionnary 
+        lang_hundred, // the one from dictionnary 
+        lang_decimals, // the one from the dictionnary
+        lang_seperator;
+
+        pickLanguage(); // function helps to pick a selected language they manip global scope vars 
+         // choose the syntax for the current dict 
+        if (lang == 'ENG'){ 
+            lang_seperator = opts.dict_syntax_eng [0];// the one from dictionnary 
+            lang_hundred = opts.dict_syntax_eng [1] ;// the one from dictionnary 
+            lang_decimals = opts.dict_syntax_eng [2] ; // the one from the dictionnary
+            lang_multiple = opts.dict_syntax_eng [3]; 
         }
-    // build the var dictionnary multiple hundred thousands and the seperator 
-    var lang_seperator = dict_syntax_lang[0],  
-        lang_hundred   = dict_syntax_lang[1], 
-        lang_thousand  = dict_syntax_lang[2], 
-        lang_multiple  = dict_syntax_lang[3]; 
+        // we have variables ready 
+        // now we can build the string in any different language 
+        // depends on what is the language selected  
 
-    /// in this case the default dictionnary is eng
-    // window.onerror = showError();  // handle the errors on the window 
+        function pickLanguage(){
+            // build the var dictionnary multiple hundred thousands and the seperator 
+            /// in this case the default dictionnary is eng
+
+            switch ( lang ){
+                case 'AR' :
+                    dict_display_lang = $(opts.dict_ar);
+                    dict_syntax_lang  = $(opts.dict_syntax_ar); 
+                    break;
+                case 'EN':
+                    dict_display_lang = $(opts.dict_eng); 
+                    dict_syntax_lang  = $(opts.dict_syntax_eng); 
+                    break;
+                case 'FR' :
+                    dict_display_lang = $(opts.dict_fr);
+                    dict_syntax_lang  = $(opts.dict_syntax_fr); 
+                    break;
+                case 'GER' :
+                    dict_display_lang = $(opts.dict_ger);
+                    dict_syntax_lang  = $(opts.dict_syntax_ger); 
+                    break;
+                case 'IT' :
+                    dict_display_lang = $(opts.dict_it);
+                    dict_syntax_lang  = $(opts.dict_syntax_it); 
+                    break;
+                default:
+                    dict_display_lang = $(opts.dict_eng);
+                    dict_syntax_lang  = $(opts.dict_syntax_en); 
+            }
+        }
+
 
     $(opts.trigger).click(function(){ 
     	var a = $(opts.theNumber).val() ; 
     		a = getNumber(a); 
         	mapping() ; //main function to trigger all functions 
-
+            // building the final string in selected language  
+            // using the dictionnary and the results and the input language 
     }); // end click function 
 
-        function buildUpperCase(argument){
-            return argument.toUpperCase(); 
-        }
-        function showError(){ 
-            displayOutput('there is errors on the page,check the script'); 
-        }
+
     	function mapping(){ 	
     	 var mappingNumber = $(opts.dict_numbers), // only one dictionnary 
     	 	 mappingString = dict_display_lang,  // choose the selected language 
     	 	 myValue 	   = getNumber($(opts.theNumber).val()), 
-			 textprefix    = ' and ', 
+			 textprefix    = lang_seperator, // ' and '
 			 stringOutput  = 'this is going to be the final output',
 			 stringLength  = 0, // by default this element is set to 0
 			 mappedvalue   = '';
@@ -74,7 +90,7 @@ $.fn.numbertoString = function(options) {
 
  			var val = buildHundreds(myValue); 
  				displayOutput(val);
-                testCase(0,999); //going to test the numbers from 0 to 999 
+                testCase(0,200); //going to test the numbers from 0 to 999 
  			//building a test case  
 			/*	var val = buildDecimals(myValue);
 					  displayOutput(val); 
@@ -84,6 +100,13 @@ $.fn.numbertoString = function(options) {
     	// and gives the 0 00 two last digits to buildDecimals 
     	// receive the full number  
     	// then return a bigger string to display 
+
+        function buildUpperCase(argument){
+            return argument.toUpperCase(); 
+        }
+        function showError(){ 
+            displayOutput('there is errors on the page,check the script'); 
+        }
         function testCase (min,max){
           for (var i = min; i < max; i++) {
             var val = buildHundreds(i); 
@@ -110,7 +133,8 @@ $.fn.numbertoString = function(options) {
              }
         }
     	function buildHundreds(argument){
-    		var tmp_string = '',
+    		var sefl = this,
+                tmp_string = '',
     			hundreds_string = '',
     			decimals_string = '',
     			decimals_number , 
@@ -141,7 +165,7 @@ $.fn.numbertoString = function(options) {
     			 hundreds_string = tmp_string.substring(0,1);
     			 hundreds_number = parseInt(hundreds_string);
     			 hundreds_string = buildDecimals(hundreds_number);
- 				 hundreds_string = hundreds_string + lang_hundred ;
+ 				 hundreds_string = hundreds_string ;
     			 tmp_string = reverseString(tmp_string) ; 
     			 decimals_string = tmp_string.substring(0,2); 
     			 decimals_string = reverseString(tmp_string); 
@@ -149,7 +173,7 @@ $.fn.numbertoString = function(options) {
     			 decimals_string = buildDecimals(decimals_number);
     			 // now we send the numbers  to the other function
     			 // and it will take care of it  
-  				return hundreds_string+lang_seperator+decimals_string; 
+  				return hundreds_string+lang_hundred+lang_seperator+decimals_string; 
     			 
     		} else {
     			// in this case the decimals function will take 
@@ -261,9 +285,9 @@ $.fn.numbertoString.defaults = {
   theNumber : '#my_number',
   divMessage:'#messages',
   lang : '',  // no language you need to set it up 
-  dict_syntax_eng:[
+dict_syntax_eng:[
     ' and ', // seperator
-    'hundred', // hundreds
+    ' hundred', // hundreds
     'thousand', // thousand
     's' // multiple units 
     ],
