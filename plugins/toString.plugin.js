@@ -48,6 +48,7 @@ $.fn.numbertoString = function(options) {
             lang_thousand = opts.dict_syntax_ger[2] ; // the one from the dictionnary
             lang_multiple = opts.dict_syntax_ger[3]; 
         }
+      
         // we have variables ready 
         // now we can build the string in any different language 
         // depends on what is the language selected  
@@ -106,7 +107,7 @@ $.fn.numbertoString = function(options) {
 
             var val = buildThousands(myValue); // build thousands will handle all numbers 
                 displayOutput(val);
-                testCase(0,2000); //going to test the numbers from 0 to 999 
+                testCase(1,6000); //going to test the numbers from 0 to 999 
             //building a test case  
             /*  var val = buildDecimals(myValue);
                       displayOutput(val); 
@@ -344,10 +345,10 @@ dict_syntax_eng:[
     's' // multiple units 
     ],
 dict_syntax_ar:[
-    ' and ', // seperator
-    ' hundred', // hundreds
-    'thousand', // thousand
-    's' // multiple units 
+    ' و ', // seperator
+    ' مئة', // hundreds
+    ' ألف ', // thousand
+    '' // multiple units 
 ], 
 dict_syntax_fr:[
     ' et ', // seperator
