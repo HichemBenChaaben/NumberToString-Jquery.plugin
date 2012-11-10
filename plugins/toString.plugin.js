@@ -286,7 +286,37 @@ $.fn.numbertoString.defaults = {
 					100,
 					1000,
 					10000,
-					100000], 
+					100000],
+dict_syntax_eng:[
+    ' and ', // seperator
+    'hundred', // hundreds
+    'thousand' // thousand
+    's' // multiple units 
+    ],
+dict_syntax_ar:[
+    ' and ', // seperator
+    'hundred', // hundreds
+    'thousand' // thousand
+    's' // multiple units 
+], 
+dict_syntax_fr:[
+    ' and ', // seperator
+    'hundred', // hundreds
+    'thousand' // thousand
+    's' // multiple units 
+], 
+dict_syntax_ger:[
+    ' and ', // seperator
+    'hundred', // hundreds
+    'thousand' // thousand
+    's' // multiple units 
+], 
+dict_syntax_it:[
+    ' and ', // seperator
+    'hundred', // hundreds
+    'thousand' // thousand
+    's' // multiple units 
+],
 dict_eng:[
 						'zero',
 						'one', 
@@ -320,12 +350,7 @@ dict_eng:[
 						'thousand',
 						'million',
 						'billion'
-						],
-dict_seperator_eng:[' and '],
-dict_seperator_ar:[], 
-dict_seperator_fr:[' et '],
-dict_seperator_ger:[' und '],
-dict_seperator_it:[' e '],    
+						],    
 dict_ar:[
         'واحد', 
         'اثنين',
@@ -359,7 +384,7 @@ dict_ar:[
         'مليون',
         'بليون'
     ], 
-    dict_fr :[
+dict_fr :[
     "zéro",
     "un",
     "deux",
