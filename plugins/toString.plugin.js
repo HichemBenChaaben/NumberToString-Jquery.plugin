@@ -86,8 +86,8 @@ $.fn.numbertoString = function(options) {
 
 
     $(opts.trigger).click(function(){ 
-        var a = $(opts.theNumber).val() ; 
-            a = getNumber(a); 
+        //var a = $(opts.theNumber).val() ; 
+           // a = getNumber(a); 
             mapping() ; //main function to trigger all functions 
             // building the final string in selected language  
             // using the dictionnary and the results and the input language 
@@ -107,7 +107,7 @@ $.fn.numbertoString = function(options) {
 
             var val = buildThousands(myValue); // build thousands will handle all numbers 
                 displayOutput(val);
-                testCase(1,6000); //going to test the numbers from 0 to 999 
+               // testCase(1,6000); //going to test the numbers from 0 to 999 
             //building a test case  
             /*  var val = buildDecimals(myValue);
                       displayOutput(val); 
@@ -159,16 +159,17 @@ $.fn.numbertoString = function(options) {
                         // tmp_string = reverseString(tmp_string);
                         tmp_string = reverseString (tmp_string); 
                         hundreds_string  = tmp_string.substring(0,3); // it will have the first part of the string 
-                        //hundreds_string = reverseString(hundreds_string); 
+                        hundreds_string = reverseString(hundreds_string); 
 
-                        //tmp_string = reverseString (tmp_string); 
-                        thousands_string = tmp_string.substring(s_length+3,s_length-1); ; // it will have the rest of the string 
-                        thousands_string = reverseString (thousands_string);
+                        tmp_string = reverseString (tmp_string); 
+                        thousands_string = tmp_string.substring(0,s_length-3); ; // it will have the rest of the string 
 
                         hundreds_number  = parseInt(hundreds_string);
                         thousands_number = parseInt(thousands_string); 
+
+                        console.log('the thousands string value is '+thousands_string);
                         console.log('the thousands number is +'+thousands_number);
-                        console.log('the hundreds number is +'+hundreds_number);
+                
                         thousands_string = buildHundreds (thousands_number);
                         hundreds_string  = buildHundreds (hundreds_number);
                        
@@ -369,36 +370,36 @@ dict_syntax_it:[
     's' // multiple units 
 ], 
   dict_numbers:[0,1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8,
-                    9,
-                    10,
-                    11,
-                    12,
-                    13,
-                    14,
-                    15,
-                    16,
-                    17,
-                    18,
-                    19,
-                    20,
-                    30,
-                    40,
-                    50,
-                    60,
-                    70,
-                    80,
-                    90,
-                    100,
-                    1000,
-                    10000,
-                    100000],
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    1000,
+    10000,
+    100000],
 dict_eng:[
         'zero',
         'one', 
