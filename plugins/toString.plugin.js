@@ -9,8 +9,7 @@
 $.fn.numbertoString = function(options) {
   if (!this.length) { return this; }
   var opts = $.extend(true, {}, $.fn.numbertoString.defaults, options);
-  this.each(function() {
-
+  this.each(function() { 
     var e = $(this),   
         dict_display_lang = opts.lang, //language shoosen 
         lang = opts.lang.toUpperCase(), 
@@ -19,71 +18,31 @@ $.fn.numbertoString = function(options) {
         total_hundreds,    // the unit translated
         total_decimals,  // the unit translatd
         lang_thousand, // the one from dictionnary 
+        lang_millions,
         lang_hundred, // the one from dictionnary 
         lang_decimals, // the one from the dictionnary
         lang_seperator, 
         lang_multiple;
+        // picking the english syntax dictionnary 
+        // and then making the numbers available in english 
+        // and then here we go 
+        
+        dict_display_lang = $(opts.dict_eng); 
+        dict_syntax_lang  = $(opts.dict_syntax_eng);
+        
+        // picking the seperators 
+        // from the dictionnary lang  
+        // and doing some awesome stuff 
 
-        pickLanguage(); // function helps to pick a selected language they manip global scope vars 
-         // choose the syntax for the current dict 
-        if (lang == 'ENG'){ 
-            lang_seperator = opts.dict_syntax_eng [0];// the one from dictionnary 
-            lang_hundred = opts.dict_syntax_eng [1] ;// the one from dictionnary 
-            lang_thousand = opts.dict_syntax_eng [2] ; // the one from the dictionnary
-            lang_multiple = opts.dict_syntax_eng [3]; 
-        }else if (lang == 'FR'){
-            lang_seperator = opts.dict_syntax_fr [0];// the one from dictionnary 
-            lang_hundred = opts.dict_syntax_fr [1] ;// the one from dictionnary 
-            lang_thousand = opts.dict_syntax_fr[2] ; // the one from the dictionnary
-            lang_multiple = opts.dict_syntax_fr[3]; 
+        lang_seperator = opts.dict_syntax_eng [0];// the one from dictionnary 
+        lang_hundred = opts.dict_syntax_eng [1] ;// the one from dictionnary 
+        lang_thousand = opts.dict_syntax_eng [2] ; // the one from the dictionnary
+        lang_multiple = opts.dict_syntax_eng [3];
+        lang_millions = opts.dict_syntax_eng [4] ;
 
-        } else if( lang == 'AR'){
-            lang_seperator = opts.dict_syntax_ar [0];// the one from dictionnary 
-            lang_hundred = opts.dict_syntax_ar[1] ;// the one from dictionnary 
-            lang_thousand = opts.dict_syntax_ar [2] ; // the one from the dictionnary
-            lang_multiple = opts.dict_syntax_ar[3]; 
-        }else if (lang == 'GER'){
-            lang_seperator = opts.dict_syntax_ger [0];// the one from dictionnary 
-            lang_hundred = opts.dict_syntax_ger[1] ;// the one from dictionnary 
-            lang_thousand = opts.dict_syntax_ger[2] ; // the one from the dictionnary
-            lang_multiple = opts.dict_syntax_ger[3]; 
-        }
-      
         // we have variables ready 
         // now we can build the string in any different language 
         // depends on what is the language selected  
-
-        function pickLanguage(){
-            // build the var dictionnary multiple hundred thousands and the seperator 
-            /// in this case the default dictionnary is eng
-
-            switch ( lang ){
-                case 'AR' :
-                    dict_display_lang = $(opts.dict_ar);
-                    dict_syntax_lang  = $(opts.dict_syntax_ar); 
-                    break;
-                case 'EN':
-                    dict_display_lang = $(opts.dict_eng); 
-                    dict_syntax_lang  = $(opts.dict_syntax_eng); 
-                    break;
-                case 'FR' :
-                    dict_display_lang = $(opts.dict_fr);
-                    dict_syntax_lang  = $(opts.dict_syntax_fr); 
-                    break;
-                case 'GER' :
-                    dict_display_lang = $(opts.dict_ger);
-                    dict_syntax_lang  = $(opts.dict_syntax_ger); 
-                    break;
-                case 'IT' :
-                    dict_display_lang = $(opts.dict_it);
-                    dict_syntax_lang  = $(opts.dict_syntax_it); 
-                    break;
-                default:
-                    dict_display_lang = $(opts.dict_eng);
-                    dict_syntax_lang  = $(opts.dict_syntax_en); 
-            }
-        }
-
 
     $(opts.trigger).click(function(){ 
         //var a = $(opts.theNumber).val() ; 
@@ -102,7 +61,6 @@ $.fn.numbertoString = function(options) {
              stringOutput  = 'this is going to be the final output',
              stringLength  = 0, // by default this element is set to 0
              mappedvalue   = '';
-            
             // m will hold how many numbers are in the string actually 
 
             var val = buildThousands(myValue); // build thousands will handle all numbers 
@@ -129,6 +87,34 @@ $.fn.numbertoString = function(options) {
             var val = buildThousands(i); 
             displayOutput(val);
           };  
+        }
+        function buildMilions(argument){
+         var tmp_string = parseString(argument),  
+            s_length = tmp_string.length,
+            millions_string,
+            thousands_string,
+            millions_number,
+            thousands_number; 
+            if(s_length < 7 ){
+              millions_string = buildThousands(argument);
+              return thousands_string ; 
+            }
+            else{ 
+                // pick up the millions 
+                // the rest will be handled by the other function  
+                tmp_string  = reverseString( tmp_string); 
+                thousands_string = tmp_string.substring(0,6); 
+                console.log(thousands_string);
+                thousands_number = parseInt(thousands_string);
+
+                // we will pick up the milions now 
+                millions_string = tmp_string.substring(0,s_length - 6 ) ; 
+                millions_string = reverseString (millions_string); 
+                millions_number = parseInt(millions_string);
+                thousands_string = buildHundreds (thousands_number); 
+                millions_number = buildHundreds(millions_string) ; 
+                return millions_string + lang_millions +lang_multiple + lang_seperator + thousands_string; // return the full result 
+             }
         }
         function buildThousands(argument){
             
@@ -157,6 +143,7 @@ $.fn.numbertoString = function(options) {
                         // the first part will handeled completely by buildHundreds function 
                         // the second part is the same but we will add a 'thousand' to it 
                         // tmp_string = reverseString(tmp_string);
+
                         tmp_string = reverseString (tmp_string); 
                         hundreds_string  = tmp_string.substring(0,3); // it will have the first part of the string 
                         hundreds_string = reverseString(hundreds_string); 
@@ -176,8 +163,8 @@ $.fn.numbertoString = function(options) {
                         if(thousands_number == 1){
                             lang_multiple ='' ;
                         }
-
-                    return thousands_string + lang_thousand +lang_multiple + lang_seperator + hundreds_string; // return the full result 
+                      hundreds_string = addSeperator(hundreds_string);      
+                    return thousands_string + lang_thousand + lang_multiple + hundreds_string; // return the full result 
 
                     } else { 
                         // do nothing for the moment 
@@ -198,11 +185,9 @@ $.fn.numbertoString = function(options) {
             s_lenght = tmp_string.length; 
 
             if( (s_lenght > 0 ) && (s_lenght <= 2)){
-
                 //displayOutput('we are in a case where there is no hundreds ') ; 
-   
                 decimals_string = buildDecimals(argument); 
-
+                decimals_string = purify(decimals_string); 
                 return decimals_string;
             }  
             if( (s_lenght > 2 ) && (s_lenght < 4)){
@@ -225,9 +210,13 @@ $.fn.numbertoString = function(options) {
                  decimals_string = reverseString(tmp_string); 
                  decimals_number = parseInt(decimals_string); 
                  decimals_string = buildDecimals(decimals_number);
+
+                // decimals_string  = (typeof(decimals_string)==undefined ? '' : lang_seperator + decimals_string);
                  // now we send the numbers  to the other function
                  // and it will take care of it  
-                return hundreds_string+lang_hundred+lang_seperator+decimals_string; 
+                 decimals_string = addSeperator(decimals_string);
+
+                return hundreds_string+lang_hundred+decimals_string; 
                  
             } else {
                 // in this case the decimals function will take 
@@ -260,21 +249,18 @@ $.fn.numbertoString = function(options) {
             //alert('tmp_string value after simple find value is '+tmp_string);
             // if we found the number then we will return it ! 
             // we will check if now tmp_string is not Nan using isNan(); 
-            if (typeof(tmp_string)!== 'undefined' ){
-                // then we will return the tmp_string and we are done  
-                return tmp_string; 
-                // the function will stop running here 
-            }       
+            tmp_string  = purify (tmp_string) ;
             // then we will return the combined strings 
             var tmp = parseString(argument); 
                 tmp = reverseString(tmp);
-
-            units = tmp.substring(0,1) ;
-            decimals = tmp.substring(1,2);
-            decimals = decimals+'0' ; // adding zero for mapping 
-            units = simpleFindNumber(units); 
-            decimals = simpleFindNumber(decimals);
-            tmp_string = decimals+' '+units;  
+                units = tmp.substring(0,1) ;
+                decimals = tmp.substring(1,2);
+                decimals = decimals+'0' ; // adding zero for mapping 
+                units = simpleFindNumber(units); 
+                decimals = simpleFindNumber(decimals);
+                decimals = purify( decimals ) ;
+                units = purify (units); 
+                tmp_string = decimals+' '+units;
             return tmp_string; 
             // now we have something like twenty one !!
             // or something like ninety three 
@@ -326,6 +312,13 @@ $.fn.numbertoString = function(options) {
             argument.text('').text(errorMessage);
             // body...
         }
+        function purify(args){ 
+            var type = typeof(args); 
+            return ( type == 'undefined' ? '' : args ); // return  an empty value if its nan 
+        }
+        function addSeperator (argument) {
+           return  argument = (argument.length > 2 ? lang_seperator + argument : argument ) ; 
+        }
         function getNumber (argument) {
             return argument  ; 
         }
@@ -343,7 +336,8 @@ dict_syntax_eng:[
     ' and ', // seperator
     ' hundred', // hundreds
     ' thousand ', // thousand
-    's' // multiple units 
+    's', // multiple units 
+    ' millions '
     ],
 dict_syntax_ar:[
     ' و ', // seperator
@@ -369,37 +363,7 @@ dict_syntax_it:[
     ' thousand', // thousand
     's' // multiple units 
 ], 
-  dict_numbers:[0,1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    30,
-    40,
-    50,
-    60,
-    70,
-    80,
-    90,
-    100,
-    1000,
-    10000,
-    100000],
+  dict_numbers:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,30,40,50,60,70,80,90,100,1000,10000,100000],
 dict_eng:[
         'zero',
         'one', 
@@ -433,107 +397,5 @@ dict_eng:[
         'thousand',
         'million',
         'billion'
-        ],    
-dict_ar:[
-        'واحد', 
-        'اثنين',
-        'ثلاثة',
-        'أربعة',
-        'خمسة',
-        'ستة',
-        'سبعة',
-        'ثمانية',
-        'تسعة',
-        'عشرة',
-        'أحد عشر',
-        'الاثني عشر',
-        'ثلاثة عشر',
-        'أربعة عشر',
-        'خمسة عشر',
-        'ست عشرة',
-        'سبعة عشر',
-        'ثمانية عشر',
-        'تسعة عشر', // nineteen is wrong 
-        'عشرون',
-        'ثلاثون',
-        'أربعين',
-        'خمسون',
-        'ستون',
-        'سبعون',
-        'ثمانون',
-        'تسعون',
-        'مئات',
-        'ألف',
-        'مليون',
-        'بليون'
-    ], 
-dict_fr :[
-    "zéro",
-    "un",
-    "deux",
-    "trois",
-    "quatre",
-    "cinq",
-    "six",
-    "sept",
-    "huit",
-    "neuf",
-    "dix",
-    "onze",
-    "douze",
-    "treize",
-    "quatorze",
-    "quinze",
-    "seize",
-    "dix-sept",
-    "dix-huit",
-    "dix-neuf",
-    "vingt",
-    "trente",
-    "quarante",
-    "cinquante",
-    "soixante",
-    "soixante-dix",
-    "quatre-vingts",
-    "quatre vingt dix",
-    "cent",
-    "mille",
-    "million",
-    "milliard"
-],  
-dict_ger:[
-    "Null",
-    "eins",
-    "zwei",
-    "Drei",
-    "vier",
-    "fünf",
-    "sechs",
-    "sieben",
-    "acht",
-    "neun",
-    "zehn",
-    "eleven",
-    "Zwölf",
-    "dreizehn",
-    "vierzehn",
-    "fünfzehn",
-    "sechzehn",
-    "siebzehn",
-    "achtzehn",
-    "neunzehn",
-    "zwanzig",
-    "dreißig",
-    "vierzig",
-    "fünfzig",
-    "sechzig",
-    "siebzig",
-    "achtzig",
-    "neunzig",
-    "hundert",
-    "tausend",
-    "Millionen",
-    "billion"
-]
-};
+        ]};
 })(jQuery);
